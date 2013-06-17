@@ -13,21 +13,20 @@
 
 ActiveRecord::Schema.define(:version => 20130617171002) do
 
-  create_table "meetings", :force => true do |t|
-    t.string   "body"
-    t.date     "deadline"
-    t.date     "duedate"
-    t.string   "state"
-    t.integer  "user_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "meetings_attendees", :force => true do |t|
+  create_table "meeting_collaborators", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "user_id"
     t.integer  "meeting_id"
+  end
+
+  create_table "meetings", :force => true do |t|
+    t.string   "body"
+    t.datetime "deadline"
+    t.datetime "duedate"
+    t.string   "state"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "users", :force => true do |t|

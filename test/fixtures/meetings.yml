@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  body: MyString
+  deadline: 2013-06-17
+  duedate: 2013-06-17
+  state: MyString
+
+two:
+  body: MyString
+  deadline: 2013-06-17
+  duedate: 2013-06-17
+  state: MyString

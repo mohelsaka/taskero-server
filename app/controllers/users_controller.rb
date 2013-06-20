@@ -42,6 +42,9 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
 
+    # create or update
+    @user.id = User.find_by_email(@user.email).try(:id)
+
     respond_to do |format|
       if @user.save
         format.html { redirect_to @user, notice: 'User was successfully created.' }
@@ -57,6 +60,11 @@ class UsersController < ApplicationController
   # PUT /users/1.json
   def update
     @user = User.find(params[:id])
+    user_updates = User.new(params[:user])
+
+    if @user.email != user_updates.email
+      raise
+    end
 
     respond_to do |format|
       if @user.update_attributes(params[:user])

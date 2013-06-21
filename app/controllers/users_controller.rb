@@ -43,10 +43,17 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
 
     # create or update
-    @user.id = User.find_by_email(@user.email).try(:id)
+    old_user = User.find_by_email(@user.email)
+
+    success_condition = if old_user.nil?
+      @user.save
+    else
+      @user = old_user
+      @user.update_attributes(params[:user])
+    end
 
     respond_to do |format|
-      if @user.save
+      if success_condition
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render json: @user, status: :created, location: @user }
       else

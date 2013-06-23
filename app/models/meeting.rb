@@ -1,5 +1,5 @@
 class Meeting < ActiveRecord::Base
-  attr_accessible :body, :deadline, :duedate, :state, :collaborators
+  attr_accessible :body, :deadline, :duedate, :state, :collaborators, :duration
 
   has_many :meeting_collaborators
   has_many :users, :through => :meeting_collaborators
@@ -7,4 +7,5 @@ class Meeting < ActiveRecord::Base
   def collaborators=(_collaborators)
   	self.users << _collaborators.map {|collaborator| User.find_or_create_by_email(collaborator)}
   end
+
 end

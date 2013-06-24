@@ -15,7 +15,7 @@ class Meeting < ActiveRecord::Base
 		meeting_json = self.to_json(:include => {:users => {:only => :email}})
 
   	# preparing android message
-		android_message = {data: {score: meeting_json}, collapse_key: "meeting_request"}
+		android_message = {data: {meeting: meeting_json}, collapse_key: "meeting_request"}
   	
   	# preparing wp message
     wp_message = {
@@ -41,7 +41,7 @@ class Meeting < ActiveRecord::Base
 																						 :meeting_collaborators => {:only => :state}})
 
   	# preparing android message
-		android_message = {data: {score: meeting_json}, collapse_key: "decline_meeting"}
+		android_message = {data: {meeting: meeting_json}, collapse_key: "decline_meeting"}
   	
   	# preparing wp message
     wp_message = {
@@ -57,7 +57,7 @@ class Meeting < ActiveRecord::Base
   	meeting_json = self.to_json(:include => {:users => {:only => :email}})
 
   	# preparing android message
-		android_message = {data: {score: meeting_json}, collapse_key: "accept_meeting"}
+		android_message = {data: {meeting: meeting_json}, collapse_key: "accept_meeting"}
   	
   	# preparing wp message
     wp_message = {

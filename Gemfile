@@ -26,6 +26,11 @@ gem 'jquery-rails'
 # GCM gem
 gem 'gcm'
 
+# gem to communicate with Microsoft Push Notification Service
+gem 'ruby-mpns'
+
+gem 'delayed_job_active_record'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

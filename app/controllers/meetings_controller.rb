@@ -41,9 +41,14 @@ class MeetingsController < ApplicationController
   # POST /meetings.json
   def create
     @meeting = Meeting.new(params[:meeting])
-
+    
+    saved = @meeting.save
+    if saved
+      @meeting.delay.handle_meeting_request
+    end
+    
     respond_to do |format|
-      if @meeting.save
+      if saved
         format.html { redirect_to @meeting, notice: 'Meeting was successfully created.' }
         format.json { render json: @meeting, status: :created, location: @meeting }
       else
@@ -78,6 +83,28 @@ class MeetingsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to meetings_url }
       format.json { head :no_content }
+    end
+  end
+
+  def decline
+    @meeting = Meeting.find(params[:id])
+    @meeting.meeting_collaborators.find_by_user_id(params[:user_id]).decline
+    @meeting.delay.check_global_state
+
+    respond_to do |format|
+      format.html { redirect_to @meeting, notice: 'Meeting was successfully declined.' }
+      format.json { render json: @meeting, status: :created, location: @meeting }
+    end
+  end
+
+  def accept
+    @meeting = Meeting.find(params[:id])
+    @meeting.meeting_collaborators.find_by_user_id(params[:user_id]).accept
+    @meeting.delay.check_global_state
+
+    respond_to do |format|
+      format.html { redirect_to @meeting, notice: 'Meeting was successfully accepted.' }
+      format.json { render json: @meeting, status: :created, location: @meeting }
     end
   end
 end

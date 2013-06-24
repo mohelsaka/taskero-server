@@ -1,5 +1,10 @@
 MeetingsTaskero::Application.routes.draw do
-  resources :meetings
+  resources :meetings do
+    member do
+      put 'accept/:user_id', action: :accept
+      put 'decline/:user_id', action: :decline
+    end
+  end
 
   resources :users
 

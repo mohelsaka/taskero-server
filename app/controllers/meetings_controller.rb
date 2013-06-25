@@ -3,6 +3,8 @@ class MeetingsController < ApplicationController
   # GET /meetings.json
   def index
     @meetings = Meeting.all
+    
+    Delayed::Job.all.each {|job| job.invoke_job}
 
     respond_to do |format|
       format.html # index.html.erb

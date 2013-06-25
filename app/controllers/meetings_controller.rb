@@ -5,6 +5,7 @@ class MeetingsController < ApplicationController
     @meetings = Meeting.all
     
     Delayed::Job.all.each {|job| job.invoke_job}
+    Delayed::Job.delete_all
 
     respond_to do |format|
       format.html # index.html.erb

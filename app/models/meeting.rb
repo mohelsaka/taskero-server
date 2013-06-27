@@ -17,11 +17,13 @@ class Meeting < ActiveRecord::Base
   	# preparing android message
 		android_message = {data: {meeting: meeting_json}, collapse_key: "meeting_request"}
   	
+    meeting_hash = self.attributes
+    meeting_hash["collaborators"] = self.users.map(&:email)
   	# preparing wp message
     wp_message = {
       title: "meeting_request",
       content: "meeting request from #{self.users.first.email}",
-      params: meeting_json
+      params: meeting_hash
     }
 		broadcast_message(android_message, wp_message)
   end

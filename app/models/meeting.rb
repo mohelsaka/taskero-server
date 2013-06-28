@@ -8,7 +8,19 @@ class Meeting < ActiveRecord::Base
   	self.users << _collaborators.map {|collaborator| User.find_or_create_by_email(collaborator)}
   end
 
+  def to_hash(include_state=false)
+    meeting_hash = self.attributes
+    meeting_hash["collaborators"] = self.users.map(&:email)
+    if include_state
+      meeting_hash["users_response"] = self.meeting_collaborators.map(&:state)
+    end
+    meeting_hash
+  end
+
   def handle_meeting_request
+    # return in case of empty collaborators meeting
+    return if self.users.empty?
+
   	# calc due date from java code
   	self.update_attribute(:duedate, Time.now.to_i)
 		
@@ -17,13 +29,11 @@ class Meeting < ActiveRecord::Base
   	# preparing android message
 		android_message = {data: {meeting: meeting_json}, collapse_key: "meeting_request"}
   	
-    meeting_hash = self.attributes
-    meeting_hash["collaborators"] = self.users.map(&:email)
   	# preparing wp message
     wp_message = {
       title: "meeting_request",
       content: "meeting request from #{self.users.first.email}",
-      params: meeting_hash
+      params: self.to_hash
     }
 		broadcast_message(android_message, wp_message)
   end
@@ -49,7 +59,7 @@ class Meeting < ActiveRecord::Base
     wp_message = {
       title: "decline_meeting",
       content: "meeting request from #{self.users.first.email}",
-      params: meeting_json
+      params: self.to_hash(true)
     }
 
 		broadcast_message(android_message, wp_message)  	
@@ -65,7 +75,7 @@ class Meeting < ActiveRecord::Base
     wp_message = {
       title: "accept_meeting",
       content: "meeting request from #{self.users.first.email}",
-      params: meeting_json
+      params: self.to_hash
     }
 
 		broadcast_message(android_message, wp_message)  	
